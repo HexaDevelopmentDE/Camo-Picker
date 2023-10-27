@@ -33,6 +33,7 @@
             'r' => ($r_all / $counter),
             'g' => ($g_all / $counter),
             'b' => ($b_all / $counter),
+            'combined' => (($r_all / $counter) + ($g_all / $counter) + ($b_all / $counter)) / 3,
         ];
         $patterns[] = $average;
         var_dump($average);
