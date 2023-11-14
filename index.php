@@ -59,7 +59,7 @@
         </tr>
         <tr>
             <td>
-                <img src=<?php echo $image_url;?>>
+                <img src=<?php echo $image_url;?> id="compare_img" style="height: 300px;">
             </td>
             <td id="average_rgb">
                 <?php echo "
@@ -69,7 +69,9 @@
                 combined: ".$average['combined']; ?>
             </td>
             <td>
-                <img id='camo'>
+                <img id='camo1'>
+                <img id='camo2'>
+                <img id='camo3'>
                 <label id='text'></label>
             </td>
         </tr>
@@ -102,57 +104,76 @@
                 let b_diff = Math.abs(b - b_camo);
                
                 arr.push([camos[i][0], r_diff, g_diff, b_diff]);
-            }
-            console.log(arr);
-
-            arr = sort(arr);
-            
-            console.log(arr);
-
-
-            for(let i = 0; i < camos.length; i++) {
-                let camo = camos[i][4] * mult;
-                let difference = Math.abs(combined - camo);
-                if(difference == arr[0])
-               
-                img_url = "./img/camos/" + camos[i][0] + ".jpg";
-                console.log(img_url);
+            }            
+            // arr => array mit den Camos und den Unterschieden im rgb
+            camo = sort(arr);
+            if(Array.isArray(camo)) {
+                img_url_1 = "./img/camos/" + camo[0] + ".jpg";
+                //console.log(img_url_1);
+                img_url_2 = "./img/camos/" + camo[1] + ".jpg";
+                //console.log(img_url_2);
+                img_url_3 = "./img/camos/" + camo[2] + ".jpg";
+                //console.log(img_url_3);
+            } else {
+                img_url = "./img/camos/" + camo + ".jpg";
+                //console.log(img_url);
             }
 
             if(img_url != "") {
                 let img = document.getElementById("camo");
                 img.src = img_url;
+                img.style.height = document.getElementById("compare_img").style.height;
             } else {
-                const text = document.getElementById("text");
-                text.innerText = "no matching camo was found.";
+                let img1 = document.getElementById("camo1");
+                img1.src = img_url_1;
+                img1.style.height = document.getElementById("compare_img").style.height;
+           
+                let img2 = document.getElementById("camo2");
+                img2.src = img_url_2;
+                img2.style.height = document.getElementById("compare_img").style.height;
+           
+                let img3 = document.getElementById("camo3");
+                img3.src = img_url_3;
+                img3.style.height = document.getElementById("compare_img").style.height;
+           
             }
         }
 
         function sort (arr) {
-            let tmp = [];
-            let new_arr = [];
 
-            for(let i = 1; i < arr.length; i++) {
-                r_1 = arr[i-1][1];
-                r_2 = arr[i][1];
-                g_1 = arr[i-1][2];
-                g_2 = arr[i][2];
-                b_1 = arr[i-1][3];
-                b_2 = arr[i][3];
+            //console.log("Sortiert nach 'R':");
+            const r_arr = arr.sort((a, b) => a[1] - b[1])[0][0];
+            //console.log(r_arr);
 
-                if(
-                    (r_2 < r_1 && g_2 < g_1 && b_2 < b_1) ||
-                    (r_2 < r_1 && g_2 < g_1 && b_2 < b_1)
-                ) {
-                    new_arr.push(arr[i]);
-                    new_arr.push(arr[i-1]);
-                } else {
-                    new_arr.push(arr[i-1]);
-                    new_arr.push(arr[i]);
-                }
+            //console.log("Sortiert nach 'G':");
+            const g_arr = arr.sort((a, b) => a[2] - b[2])[0][0];
+            //console.log(g_arr);
+
+            //console.log("Sortiert nach 'B':");
+            const b_arr = arr.sort((a, b) => a[3] - b[3])[0][0];
+            //console.log(b_arr);
+            
+            if((r_arr[0][0] == g_arr[0][0]) && (r_arr[0][0] == b_arr[0][0])) {
+                //alle drei identzisch
+                //console.log("trigger 1");
+                return r_arr;
+            } else if((r_arr[0][0] != g_arr[0][0]) && (r_arr[0][0] != b_arr[0][0]) && (g_arr[0][0] != b_arr[0][0])) {
+                //alle drei verschieden
+                //console.log("trigger 2");
+                return [r_arr, g_arr, b_arr];
+            } else if((r_arr[0][0] == g_arr[0][0]) && (r_arr[0][0] != b_arr[0][0])){
+                //r & g identisch
+                //console.log("trigger 3");
+                return r_arr;
+            } else if((r_arr[0][0] != g_arr[0][0]) && (r_arr[0][0] == b_arr[0][0])){
+                //r & b identisch
+                //console.log("trigger 4");
+                return r_arr;
+            } else if((b_arr[0][0] == g_arr[0][0]) && (r_arr[0][0] != b_arr[0][0])){
+                //b & g identisch
+                //console.log("trigger 5");
+                return b_arr;
             }
-
-            return new_arr;
         }
     </script>
 </body>
