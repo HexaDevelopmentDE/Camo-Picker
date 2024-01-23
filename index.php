@@ -59,7 +59,15 @@
         </tr>
         <tr>
             <td>
-                <img src=<?php echo $image_url;?> id="compare_img" style="height: 300px;">
+                <form action="index.php" method="post">
+                    <label for="default_image">Choose a default image:</label>
+                    <select name="default_image" id="default_image">
+                        <option value="example1"><img src=".\img\demo\example1.jpg" style="height: 100px;"></option>
+                        <option value="example2"><img src=".\img\demo\example2.jpg" style="height: 100px;"></option>
+                    </select>
+                    <label for="upload_image">Or upload your own image:</label>
+                    <img src=<?php echo $image_url;?> id="compare_img" style="height: 300px;">
+                </form>
             </td>
             <td id="average_rgb">
                 <?php echo "
